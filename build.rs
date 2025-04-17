@@ -1119,30 +1119,42 @@ fn main() {
             .include_paths
     };
 
-    if statik
-        && matches!(
-            env::var("CARGO_CFG_TARGET_OS").as_deref(),
-            Ok("macos") | Ok("ios")
-        )
-    {
-        let frameworks = vec![
-            "AppKit",
-            "AudioToolbox",
-            "AVFoundation",
-            "CoreFoundation",
-            "CoreGraphics",
-            "CoreMedia",
-            "CoreServices",
-            "CoreVideo",
-            "Foundation",
-            "OpenCL",
-            "OpenGL",
-            "QTKit",
-            "QuartzCore",
-            "Security",
-            "VideoDecodeAcceleration",
-            "VideoToolbox",
-        ];
+    if statik && cfg!(target_os = "macos") {
+        let frameworks = if env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("ios") {
+            vec![
+                "AudioToolbox",
+                "AVFoundation",
+                "CoreFoundation",
+                "CoreGraphics",
+                "CoreAudio",
+                "CoreMedia",
+                "CoreVideo",
+                "Foundation",
+                "QuartzCore",
+                "Security",
+                "VideoToolbox",
+            ]
+        } else {
+            vec![
+                "AppKit",
+                "AudioToolbox",
+                "AVFoundation",
+                "CoreFoundation",
+                "CoreGraphics",
+                "CoreMedia",
+                "CoreServices",
+                "CoreAudio",
+                "CoreVideo",
+                "Foundation",
+                "OpenCL",
+                "OpenGL",
+                "QuartzCore",
+                "Security",
+                "VideoDecodeAcceleration",
+                "VideoToolbox",
+            ]
+        };
+
         for f in frameworks {
             println!("cargo:rustc-link-lib=framework={}", f);
         }
