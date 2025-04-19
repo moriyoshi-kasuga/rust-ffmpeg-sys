@@ -542,11 +542,11 @@ fn build(sysroot: Option<&str>) -> io::Result<()> {
         configure.arg("--enable-videotoolbox");
 
         if target != host && env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("ios") {
-            configure.arg("--extra-cflags=-mios-version-min=11.0");
+            configure.arg("--extra-cflags=-mios-version-min=18.1");
         }
 
         if target != host && env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("macos") {
-            configure.arg("--extra-cflags=-mmacosx-version-min=10.11");
+            configure.arg("--extra-cflags=-mmacosx-version-min=18.1");
         }
     }
 
