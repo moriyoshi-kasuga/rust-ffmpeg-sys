@@ -968,6 +968,14 @@ fn main() {
     let statik = env::var("CARGO_FEATURE_STATIC").is_ok();
     let ffmpeg_major_version: u32 = env!("CARGO_PKG_VERSION_MAJOR").parse().unwrap();
 
+    if cfg!(target_os = "macos") {
+        println!("cargo:rustc-link-lib=c++");
+
+        if env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("ios") {
+            println!("cargo:rustflags=-C link-arg=-lc++");
+        }
+    }
+
     let sysroot = find_sysroot();
     let include_paths: Vec<PathBuf> = if env::var("CARGO_FEATURE_BUILD").is_ok() {
         println!(
